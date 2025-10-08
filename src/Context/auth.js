@@ -93,7 +93,7 @@ function storageUser(data) {
 }
 
 async function logout(){
-    await signOut()
+    await signOut(auth)
     localStorage.removeItem('@ticketsPro')
     setUser(null)
     
