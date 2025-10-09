@@ -7,7 +7,13 @@ import './header.css'
 
 
 export default function Header() {
-  const {user} = useContext(AuthContext)
+  const {user,logout } = useContext(AuthContext)
+
+  async function handleLogout() {
+  await logout()
+}
+
+
  return (
    <div className="sidebar">
   <div>
@@ -31,6 +37,7 @@ Clientes
 Prefil
 </Link>
 
+<button onClick={handleLogout} >Sair da conta</button>
 
    </div>
  );
