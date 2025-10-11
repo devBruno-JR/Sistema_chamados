@@ -6,6 +6,9 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/auth";
 import './Profile.css'
 import { toast } from "react-toastify";
+import { db, storage } from "../../services/FireBaseConectio";
+import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function Profile() {
   const { user,storageUser,setUser,logout } = useContext(AuthContext)
@@ -20,7 +23,7 @@ if(e.target.files[0]){
   const image = e.target.files[0]
 
   if(image.type ==='image/jpeg' || image.type == 'image/png'){
-    setAvartarUrl(image)
+    setImageAvatar(image)
     setAvartarUrl(URL.createObjectURL(image))
   }else{
    toast.warning("Envie uma Imagem do tipo PNG ou JPEG") 
@@ -29,6 +32,64 @@ if(e.target.files[0]){
   }
 
 }
+
+}
+async function handleUpload(){
+const currentUid = user.uid
+const updloadRef = ref(storage, `images/${currentUid}/${imageAvatar.name}`)
+const updloadTask = uploadBytes(updloadRef, imageAvatar)
+.then((snapshort)=>{
+getDownloadURL(snapshort.ref).then( async (dowloadUrl) =>{
+  let urlFoto = dowloadUrl;
+  const docRef = doc(db, "users", user.uid )
+  await updateDoc(docRef,{
+    avartarUrl:urlFoto,
+    nome:nome
+  })
+  .then(() =>{
+     let data ={
+        ...user,
+        nome:nome,
+        avartarUrl:urlFoto
+      }
+      setUser(data)
+      storageUser(data)
+      // console.log('ESSE MEU USER',user);
+      
+      toast.success("Atualizado com sucesso")
+  })
+})
+})
+}
+
+
+async function handleSubmit(e){
+  e.preventDefault();
+
+  if(imageAvatar === null && nome !== ''){
+    const docRef = doc(db,"users", user.uid)
+    await updateDoc(docRef, {
+      nome:nome
+    })
+    .then(() =>{
+      let data ={
+        ...user,
+        nome:nome
+      }
+      setUser(data)
+      storageUser(data)
+      console.log('ESSE MEU USER',user);
+      
+      toast.success("Atualizado com sucesso")
+    })
+  }else if(nome !== '' && imageAvatar !== null){
+    console.log('PASSOU AQUI');
+    
+  handleUpload()
+  }
+
+
+  // toast.success('teste')
 
 }
 
@@ -41,7 +102,7 @@ if(e.target.files[0]){
         </Title>
 
         <div className="container">
-          <form className="form-profile">
+          <form className="form-profile" onSubmit={handleSubmit}>
             <label className="label-avatar">
               <span>
                 <FiUpload color="#fff" size={25} />
