@@ -4,7 +4,8 @@ import SignUp from "../Pages/SignUp";
 import Dashboard from "../Pages/Dashboard";
 import Private from "./Private";
 import Profile from "../Pages/Profile";
-import Title from "../components/Title";
+// import Title from "../components/Title";
+import Customers from "../Pages/Customers";
 
  export default function  RoutesApp(){
 return(
@@ -14,6 +15,7 @@ return(
 
         <Route path="/dashboard" element={<Private><Dashboard/></Private>} />
         <Route path="/profile" element={<Private><Profile/></Private>} />
+        <Route path="/customers" element={<Private><Customers/></Private>} />
 
     </Routes>
 )
