@@ -108,6 +108,8 @@ async function logout(){
         loadingAuth,
         loading,
         logout,
+        storageUser,
+        setUser,
 
        }}>
         {children}

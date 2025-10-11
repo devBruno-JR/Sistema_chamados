@@ -37,7 +37,7 @@ Clientes
 Prefil
 </Link>
 
-<button onClick={handleLogout} >Sair da conta</button>
+{/* <button onClick={handleLogout} >Sair da conta</button> */}
 
    </div>
  );
